@@ -17,6 +17,7 @@ namespace Game
         }
         void displayboard()
         {
+            Console.Clear();
             int i,j;
             for(i=0;i<=2;i++)
             {
@@ -65,13 +66,18 @@ namespace Game
         {
             TicTac g1 = new TicTac();
             int n;
+            
+            startgame:
             g1.clearboard();
-            Console.WriteLine("PLAYER 1 is X PLAYER 2 is O");
             g1.displayboard();
+            Console.WriteLine("PLAYER 1 is X PLAYER 2 is O");
             while(true)
             {
+                
                 Console.WriteLine("PLAYER 1 turn");
                 n=Convert.ToInt32(Console.ReadLine());
+                if(n==0)
+                    goto startgame;
                 g1.check(n,'X');
                 g1.displayboard();
                 if(g1.endgame('X') == true)
@@ -81,8 +87,10 @@ namespace Game
                     break;
                    
                 }
-                Console.WriteLine("PLAYER 1 turn");
+                Console.WriteLine("PLAYER 2 turn");
                 n=Convert.ToInt32(Console.ReadLine());
+                if(n==0)
+                    goto startgame;
                 g1.check(n,'O');
                 g1.displayboard();
                 if(g1.endgame('O') == true)
