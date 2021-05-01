@@ -98,7 +98,6 @@ namespace Game
                     Console.WriteLine("Player 2 wins");
                     Console.ReadKey();
                     break;
-                    
                 }
             }
             
