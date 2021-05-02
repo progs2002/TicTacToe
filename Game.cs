@@ -3,8 +3,19 @@ namespace Game
 {
     class TicTac
     {
-        char[,]board = new char[3,3];
-        int[,] refe={{7,8,9},{4,5,6},{1,2,3}};
+        char[,]board;
+        static int[,] refe={{7,8,9},{4,5,6},{1,2,3}};
+
+        TicTac(TicTac o)
+        {
+            this.board = o.board;
+            //this.refe = refe;
+        }
+
+        TicTac()
+        {
+            this.board = new char[3,3];
+        }
         
         void clearboard()
         {
@@ -47,7 +58,7 @@ namespace Game
             }
             LoopEnd:
             {
-                board[m,n]=ch;
+                this.board[m,n]=ch;
             }
         }
         bool checkifdraw()
@@ -69,7 +80,7 @@ namespace Game
         bool predictdraw()
         {
             int i,j;
-            TicTac cloneboard = this;
+            TicTac cloneboard = new TicTac(this);
             for(i=0;i<=2;i++)
             {
                 for(j=0;j<=2;j++)
@@ -77,7 +88,7 @@ namespace Game
                     if(cloneboard.board[i,j]==' ')
                     {
                         cloneboard.check(refe[i,j],'X');
-                        if(cloneboard.endgame('X') == false && cloneboard.checkifdraw()==true)
+                        if(cloneboard.endgame('X',board) == false && cloneboard.checkifdraw()==true)
                             return true;
                         
                     }
@@ -85,49 +96,31 @@ namespace Game
             }
             return false;
         }
-        bool predictdraw2()
+        
+        void copyboard(char [,] ar)
+    {
+        int i,j;
+        for(i=0;i<3;i++)
         {
-            int i,j,counter=0;
-            TicTac clone1 = this;
-            TicTac clone2 = this;
-            for(i=0;i<=2;i++)
+            for(j=0;j<3;j++)
             {
-                for(j=0;j<=2;j++)
-                {
-                    if(clone1.board[i,j]==' ')
-                    {
-                        counter++;
-                        if(counter==1)
-                        {
-                            clone1.check(refe[i,j],'O');
-                            clone2.check(refe[i,j],'X');
-                        }
-                        if(counter==2)
-                        {
-                            clone1.check(refe[i,j],'X');
-                            clone2.check(refe[i,j],'O');
-                        }
-                    }
-                }
+                ar[i,j]=board[i,j];
             }
-            if((clone1.endgame('X') == false && clone1.checkifdraw()==true)&&(clone2.endgame('X') == false && clone2.checkifdraw()==true))
-                return true;
-            else
-                return false;
         }
-        bool endgame(char ch)
+    }
+        bool endgame(char ch, char [,] boardt)
         {
             int i;
             for(i=0;i<3;i++)
             {
-                if(board[i,0]==board[i,1] && board[i,1]==board[i,2] && board[i,2]==ch)
+                if(boardt[i,0]==boardt[i,1] && boardt[i,1]==boardt[i,2] && boardt[i,2]==ch)
                     return true;
-                if(board[0,i]==board[1,i] && board[1,i]==board[2,i]&& board[2,i]==ch)
+                if(boardt[0,i]==boardt[1,i] && boardt[1,i]==boardt[2,i]&& boardt[2,i]==ch)
                     return true;
             }
-            if(board[0,0]==board[1,1] && board[1,1]==board[2,2] && board[2,2]==ch)
+            if(boardt[0,0]==board[1,1] && boardt[1,1]==boardt[2,2] && boardt[2,2]==ch)
                     return true;
-            if(board[0,2]==board[1,1] && board[1,1]==board[2,0] && board[2,0]==ch)
+            if(boardt[0,2]==boardt[1,1] && boardt[1,1]==boardt[2,0] && boardt[2,0]==ch)
                     return true;
             return false;
         }
@@ -149,7 +142,7 @@ namespace Game
                     break;
                 }
                 
-                Console.WriteLine("PLAYER 1 turn");
+                Console.WriteLine("PLAYER 1 turn ");
                 turn++;
                 n=Convert.ToInt32(Console.ReadLine());
                 if(n==0)
@@ -159,7 +152,7 @@ namespace Game
                 
                 
                     
-                if(g1.endgame('X') == true)
+                if(g1.endgame('X',g1.board) == true)
                 {
                     Console.WriteLine("Player 1 wins");
                     Console.ReadKey();
@@ -167,15 +160,44 @@ namespace Game
                    
                 }
                 
-                
-                // if(turn== 7 && g1.predictdraw2()==true)
-                // {
-                //     Console.WriteLine("GAME IS DRAWN");
-                //     Console.ReadKey();
-                //     break;
-                // }
 
-                Console.WriteLine("PLAYER 2 turn");
+                
+               
+
+                Console.WriteLine("PLAYER 2 turn ");
+                //turn++;
+                if(turn== 7)
+                {
+                    int i,j,counter=0;
+                    char [,] clone1 = new char[3,3];
+                    char [,] clone2 = new char[3,3];
+                    g1.copyboard(clone1);
+                    g1.copyboard(clone2);
+                    for(i=0;i<=2;i++)
+                    {
+                        for(j=0;j<=2;j++)
+                        {
+                            counter++;
+                            if(counter==1)
+                            {
+                                clone1[i,j]='O';
+                                clone2[i,j]='X';
+                            }
+                            if(counter==2)
+                            {
+                                clone1[i,j]='X';
+                                clone2[i,j]='O';
+                            }
+                        }
+                    }
+                    if(g1.endgame('X',clone1)==false && g1.endgame('O',clone2)==false && g1.endgame('O',clone1)==false && g1.endgame('X',clone2)==false)
+                    {
+                        Console.WriteLine("Game is drawn");
+                        Console.ReadKey();
+                        break;
+                    }
+
+                }
                 turn++;
                 n=Convert.ToInt32(Console.ReadLine());
                 if(n==0)
@@ -183,7 +205,7 @@ namespace Game
                 g1.check(n,'O');
                 g1.displayboard();
                 
-                if(g1.endgame('O') == true)
+                if(g1.endgame('O',g1.board) == true)
                 {
                     Console.WriteLine("Player 2 wins");
                     Console.ReadKey();
