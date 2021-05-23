@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 class TicTac
 {
     char[][]board;
@@ -31,15 +32,22 @@ class TicTac
     }
     void displayboard()
     {
-        //Console.Clear();
+        System.out.print("\033[H\033[2J");  
+        System.out.flush(); 
         int i,j;
         for(i=0;i<=2;i++)
         {
             for(j=0;j<=2;j++)
+            {    
                 System.out.print("["+board[i][j]+"] ");
+                try {TimeUnit.MILLISECONDS.sleep(20);} catch(InterruptedException e) {e.printStackTrace();}
+            }
             System.out.print("\t\t");
             for(j=0;j<=2;j++)
+            {    
                 System.out.print("["+refe[i][j]+"] ");
+                try {TimeUnit.MILLISECONDS.sleep(20);} catch(InterruptedException e) {e.printStackTrace();}
+            }
             System.out.println();
         }
     }
@@ -144,7 +152,7 @@ class TicTac
                 break;
             }
             
-            System.out.println("PLAYER 1 turn "+turn);
+            System.out.println("PLAYER 1 turn ");
             turn++;
             n=in.nextInt();
             if(n==0)
@@ -165,7 +173,7 @@ class TicTac
             
            
 
-            System.out.println("PLAYER 2 turn "+ turn);
+            System.out.println("PLAYER 2 turn ");
             
             if(turn==7)
             {
